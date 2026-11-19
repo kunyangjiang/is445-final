@@ -61,6 +61,32 @@ def load_returns() -> pd.DataFrame:
     return us[["year", "Stocks", "Government bonds"]]
 
 
+def apply_light_chart_theme(chart: alt.Chart) -> alt.Chart:
+    """Keep Vega-Lite charts readable regardless of the visitor's browser theme."""
+    return (
+        chart.configure(background="#FFFFFF")
+        .configure_view(stroke=None, fill="#FFFFFF")
+        .configure_axis(
+            labelColor="#354656",
+            titleColor="#253C4C",
+            domainColor="#8C989F",
+            tickColor="#8C989F",
+            gridColor="#E5E8E8",
+            labelFontSize=12,
+            titleFontSize=13,
+        )
+        .configure_legend(
+            labelColor="#354656",
+            titleColor="#253C4C",
+            labelFontSize=12,
+            titleFontSize=12,
+        )
+        .configure_title(
+            anchor="start", fontSize=16, fontWeight=600, color="#253C4C"
+        )
+    )
+
+
 def make_boxplot(rows: pd.DataFrame) -> alt.Chart:
     long = rows.melt(
         id_vars="year",
@@ -68,7 +94,7 @@ def make_boxplot(rows: pd.DataFrame) -> alt.Chart:
         var_name="asset",
         value_name="annual_return",
     )
-    return (
+    return apply_light_chart_theme(
         alt.Chart(long)
         .mark_boxplot(size=35)
         .encode(
@@ -94,7 +120,6 @@ def make_boxplot(rows: pd.DataFrame) -> alt.Chart:
             ),
         )
         .properties(height=185)
-        .configure_view(stroke=None)
     )
 
 
@@ -200,11 +225,9 @@ def make_linked_charts(rows: pd.DataFrame) -> alt.Chart:
         height=325, title="Stock and bond returns: the selected year is outlined in amber"
     )
 
-    return (
+    return apply_light_chart_theme(
         alt.vconcat(heatmap, scatter, spacing=24)
         .resolve_scale(color="independent")
-        .configure_view(stroke=None)
-        .configure_title(anchor="start", fontSize=16, fontWeight=600, color="#263746")
     )
 
 
@@ -213,7 +236,7 @@ def make_stock_down_chart(rows: pd.DataFrame) -> alt.Chart:
     down_years["outcome"] = down_years["Government bonds"].gt(0).map(
         {True: "Bonds gained", False: "Bonds did not gain"}
     )
-    return (
+    return apply_light_chart_theme(
         alt.Chart(down_years)
         .mark_bar(cornerRadiusEnd=3)
         .encode(
@@ -244,7 +267,6 @@ def make_stock_down_chart(rows: pd.DataFrame) -> alt.Chart:
             ],
         )
         .properties(height=285)
-        .configure_view(stroke=None)
     )
 
 
