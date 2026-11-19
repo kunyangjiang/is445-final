@@ -1,0 +1,7 @@
+# Keep the public-facing article, sidebar and embedded charts in one light palette.
+[theme]
+base = "light"
+primaryColor = "#137D74"
+backgroundColor = "#FAFBF9"
+secondaryBackgroundColor = "#F0F4F2"
+textColor = "#233443"
